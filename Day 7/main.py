@@ -48,13 +48,11 @@ def main():
                         if x.id == current_folder:
                             current_folder = x.parent_guid
                             current_depth -= 1
-
                 else:
                     for x in folders:
                         if x.name == line_arr[2] and x.parent_guid == current_folder:
                             current_folder = x.id
                             current_depth += 1
-
     for y in files:
         for x in folders:
             if y.parent_guid == x.id:
@@ -62,11 +60,27 @@ def main():
                 if x.parent_guid != "":
                     append_size(x.parent_guid, x.depth, y.size, folders)
 
-    total_space = 0
+    freeable_space = 0
     for x in folders:
         if x.size < 100000:
-            total_space += x.size
-    print(total_space)
+            freeable_space += x.size
+    print("Task 1 answer: ", freeable_space)
+
+    system_total = 70000000
+    smallest_size = None
+    current_taken_space = None
+    smallest_directory = None
+    for x in folders:
+        if x.name == "/":
+            current_taken_space = x.size
+            continue
+        minimum_space = system_total - (current_taken_space - x.size)
+        if minimum_space > 30000000 and (minimum_space < current_taken_space or smallest_size is None):
+            smallest_size = minimum_space
+            smallest_directory = x.size
+    print("Task 2 answer: ", smallest_directory)
+
+
 
 
 def append_size(parent_guid, depth, size, folders):
